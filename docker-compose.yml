@@ -1,0 +1,37 @@
+version: "3.8"
+services: 
+    mongodb-sf:
+        image: mongo
+        restart: unless-stopped
+        ports:
+#            HOST:CONTAINER
+            - 27017:27017
+        volumes:
+            - mongo-data:/data/db
+    mongo-express-sf: 
+        image: mongo-express
+        ports:
+            - 8081:8081
+        environment:
+            - ME_CONFIG_MONGODB_SERVER=mongodb-sf
+            - ME_CONFIG_BASICAUTH_USERNAME=admin
+            - ME_CONFIG_BASICAUTH_PASSWORD=admin
+        depends_on:
+            - mongodb-sf
+    web:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: poster-mongo-sf
+        restart: on-failure
+        depends_on: 
+            - mongodb-sf
+        ports:
+            - 8084:8080
+        environment:
+            - SPRING_DATA_MONGODB_HOST=mongodb-sf
+            - SPRING_DATA_MONGODB_PORT=27017
+            - SPRING_DATA_MONGODB_DATABASE=mongodb-sf
+volumes: 
+    mongo-data:
+        driver: local
