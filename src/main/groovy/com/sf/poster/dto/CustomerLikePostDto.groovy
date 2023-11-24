@@ -8,8 +8,12 @@ import jakarta.validation.constraints.NotNull;
  */
 class CustomerLikePostDto {
     @NotNull
-    long customerId;
+    Long customerId;
     @NotNull
-    long postId;
+    Long postId;
+    
+    Long getId() {
+        postId;
+    }
 }
 

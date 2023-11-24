@@ -1,18 +1,17 @@
 package com.sf.poster.dto
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  *
- * @author OFeseniuk
+ * @author ofese
  */
-class PostCommentDto {
+class PostUpdateDto {
     @NotNull
     Long id;
-    @NotNull
-    Long customerId;
-    @NotNull
-    String comment;
+    @NotBlank
+    String text;
     
 }
 

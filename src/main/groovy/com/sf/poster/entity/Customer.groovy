@@ -10,7 +10,7 @@ class Customer {
     @Id
     Long id;
     String name;
-    Set<Long> subscriptionsIds;
+    Set<Long> subscriptionsIds = new HashSet<>();
     
     @Override
     String toString() {

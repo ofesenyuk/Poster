@@ -1,2 +1,4 @@
-# Poster
-Solution of test task. Groovy API to support Twitter like posts. with Customer and Post entitie
+docker commands
+docker build -t poster-mongo-sf .
+docker-compose down --rmi all
+docker-compose up

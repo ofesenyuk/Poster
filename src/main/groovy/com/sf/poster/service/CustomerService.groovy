@@ -42,24 +42,24 @@ class CustomerService {
     }
     
     Customer subscribeToCustomer(CustomerSubscriberDto dto) {
-        Customer subscriber = customerRepository.findById(dto.postCustomerId).get();
-        subscriber.subscriptionsIds.add(dto.customerId);
-        customerRepository.save(c);
+        Customer subscriber = customerRepository.findById(dto.customerId).get();
+        subscriber.subscriptionsIds.add(dto.postCustomerId);
+        customerRepository.save(subscriber);
     }
     
     Customer unsubscribeFromCustomer(CustomerSubscriberDto dto) {
-        Customer subscriber = customerRepository.findById(dto.postCustomerId).get();
-        subscriber.subscriptionsIds.remove(dto.customerId);
-        customerRepository.save(c);
+        Customer subscriber = customerRepository.findById(dto.customerId).get();
+        subscriber.subscriptionsIds.remove(dto.postCustomerId);
+        customerRepository.save(subscriber);
     }
     
     List<PostDto> getCustomerComments(long id) {
-        postRepository.getByCustomerIdOrderByDate(id).collect{new PostDto(customerId: customerId, text: content, date: date, likerIds: likerIds)}
+        postRepository.getByCustomerIdOrderByDate(id).collect{new PostDto(customerId: id, text: it.content, date: it.date, likerIds: it.likerIds, id: it.id)}
     }
     
     List<PostDto> getCustomerSubscribedComments(long id) {
         Customer c = customerRepository.findById(id).get();
-        postRepository.getByCustomerIdInOrderByDate(c.subscriptionsIds).collect{new PostDto(customerId: customerId, text: content, date: date, likerIds: likerIds)}
+        postRepository.getByCustomerIdInOrderByDate(c.subscriptionsIds).collect{new PostDto(customerId: id, text: it.content, date: it.date, likerIds: it.likerIds, id: it.id)}
     }
     
     private Long getNewId() {

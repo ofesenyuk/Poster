@@ -4,6 +4,7 @@ import com.sf.poster.entity.Customer
 import com.sf.poster.service.CustomerService
 import com.sf.poster.dto.CustomerSubscriberDto
 import com.sf.poster.dto.CustomerDto
+import com.sf.poster.dto.PostDto
 import org.springframework.http.ResponseEntity
 //import org.springframework.data.rest.webmvc.RepositoryRestController
 import org.springframework.web.bind.annotation.RestController
@@ -15,8 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import jakarta.validation.Valid;
-import org.springframework.validation.BindingResult;
-import org.springframework.http.HttpStatus
 
 /**
  *
@@ -35,61 +34,61 @@ class CustomerController {
     
     // TODO refactor with ControllerAdvice
     @PostMapping("/{name}")
-    ResponseEntity<?> addCustomer(@PathVariable String name) {
-        new ResponseEntity(service.addCustomer(name), HttpStatus.OK);
+    Customer addCustomer(@PathVariable String name) {
+        service.addCustomer(name);
     }
     
     @PutMapping
-    ResponseEntity<?> updateCustomer(@Valid @RequestBody CustomerDto c) {
-        new ResponseEntity(service.update(c), HttpStatus.OK);
+    Customer updateCustomer(@Valid @RequestBody CustomerDto c) {
+        service.update(c);
     }
     
     @DeleteMapping("/{id}")
     Customer deleteCustomer(@PathVariable long id) {
         Customer c = service.findById(id).orElseThrow{new IllegalArgumentException("no customer is found")}
-        service.delete(с);
+        service.delete(c);
         c;
     }
     
     @PostMapping("/subscribe")
-    ResponseEntity<?> subscribeToCustomer(@RequestBody CustomerSubscriberDto dto) {
-        if (!dto?.customerId) {
-            throw new IllegalArgumentException("(current customer) customerId is absent");
-        }
-        if (!dto.postCustomerId) {
-            throw new IllegalArgumentException("(Customer to subsribe) postCustomerId is absent");
-
-        }
-        if (!service.findById(dto.customerId) || !service.findById(dto.postCustomerId)) {
-            return new ResponseEntity<>("no customer is found", HttpStatus.NOT_FOUND) 
-        }
-        new ResponseEntity<>(service.subscribeToCustomer(dto), HttpStatus.OK);   
+    Customer subscribeToCustomer(@Valid @RequestBody CustomerSubscriberDto dto) {
+        validateSubscription(dto);
+        service.subscribeToCustomer(dto);
     }
     
     @PostMapping("/unsubscribe")
-    ResponseEntity<?> unsubscribeFromCustomer(@RequestBody CustomerSubscriberDto dto) {
-        if (!service.findById(dto.customerId) || !service.findById(dto.postCustomerId)) {
-            return new ResponseEntity<>("no customer is found", HttpStatus.NOT_FOUND) 
-        }
-        new ResponseEntity<>(service.unsubscribeFromCustomer(dto), HttpStatus.OK);   
+    Customer unsubscribeFromCustomer(@Valid @RequestBody CustomerSubscriberDto dto) {
+        validateSubscription(dto);
+        service.unsubscribeFromCustomer(dto);
     }    
     
     @GetMapping("/comments/{customerId}")
-    ResponseEntity<?> getCustomerComments(@PathVariable long customerId) {
-        Customer c = service.findById(customerId);
-        if (!c) {
-            return new ResponseEntity<>("customer is not found", HttpStatus.NOT_FOUND);
-        }
-        new ResponseEntity(service.getCustomerComments(customerId), HttpStatus.OK)
+    List<PostDto> getCustomerComments(@PathVariable long customerId) {
+        validateCustomerId(customerId);
+        service.getCustomerComments(customerId);
     }
     
-    @GetMapping("/customer/subscribed/comments")
-    ResponseEntity<?> getCustomerSubscribedComments(long customerId) {
-        Customer c = service.findById(customerId);
-        if (!c) {
-            return new ResponseEntity<>("customer is not found", HttpStatus.NOT_FOUND);
+    @GetMapping("/subscribed/comments/{customerId}")
+    List<PostDto> getCustomerSubscribedComments(@PathVariable long customerId) {
+        validateCustomerId(customerId);
+        service.getCustomerSubscribedComments(customerId);
+    }
+    
+    private validateSubscription(CustomerSubscriberDto dto) {
+        if (dto.customerId == dto.postCustomerId) {
+            throw new IllegalAccessException("customerId = postCustomerId = ${dto.customerId}")
         }
-        new ResponseEntity(service.getCustomerSubscribedComments(customerId), HttpStatus.OK)
+        Long customerAbsentId 
+            = !service.findById(dto.customerId).isPresent() ? dto.customerId 
+            : !service.findById(dto.postCustomerId).isPresent() ? dto.postCustomerId 
+            : null;
+        if (customerAbsentId) {
+            throw new IllegalArgumentException("no customer with id ${customerAbsentId} is found");
+        }       
+    }
+    
+    private validateCustomerId(long customerId) {
+        service.findById(customerId).orElseThrow(() -> new IllegalArgumentException("customer with id ${customerId} is not found"));
     }
 }
 

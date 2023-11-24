@@ -17,8 +17,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<AppError> catchResourceNotFoundException(MethodArgumentNotValidException e) {
         String errorsStr = e.getFieldErrors()        
-        .stream()
-        .map{"${it.getField()} - ${it.getDefaultMessage()}"}
+        .collect{"${it.getField()} - ${it.getDefaultMessage()}"}
         .sort()
         .join(", ");
         new ResponseEntity<>(new AppError(statusCode: HttpStatus.BAD_REQUEST.value(), message: errorsStr), HttpStatus.BAD_REQUEST);
@@ -27,6 +26,11 @@ class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<AppError> catchIllegalArgumentException(IllegalArgumentException e) {
         new ResponseEntity<>(new AppError(statusCode: HttpStatus.NOT_FOUND.value(), message: e.message), HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler
+    public ResponseEntity<AppError> catchIllegalAccessException(IllegalAccessException e) {
+        new ResponseEntity<>(new AppError(statusCode: HttpStatus.FORBIDDEN.value(), message: e.message), HttpStatus.FORBIDDEN);
     }
 }
 

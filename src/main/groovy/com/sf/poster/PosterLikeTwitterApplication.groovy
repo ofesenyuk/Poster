@@ -4,10 +4,13 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
+import java.time.LocalDate
 
 import com.sf.poster.repository.CustomerRepository
+import com.sf.poster.repository.PostRepository
 import com.sf.poster.service.CustomerService
 import com.sf.poster.entity.Customer
+import com.sf.poster.entity.Post
 
 @SpringBootApplication
 class PosterLikeTwitterApplication {
@@ -16,20 +19,24 @@ class PosterLikeTwitterApplication {
         SpringApplication.run(PosterLikeTwitterApplication, args)
     }
         
-    // This method is executed but its results are not in mongo.
-    // I could not find why.
     @Bean
-    public CommandLineRunner run(CustomerRepository repository, CustomerService service) {
+    public CommandLineRunner run(CustomerRepository repository, 
+        CustomerService service, PostRepository postRepository) {
         { args -> {
                 repository.deleteAll();
                 println "TEST"
-                Customer c1 = new Customer(id: 1, name: 'Vova1');
+                Customer c1 = new Customer(id: 1, name: 'Vova');
                 repository.save(c1);
-                Customer c2 = new Customer(id: 3, name: 'Kolya1');
+                Customer c2 = new Customer(id: 3, name: 'Kolya');
                 repository.save(c2);
-                Customer c3 = new Customer(id: 4, name: 'Kostya1');
-                repository.save(c2);
-                service.addCustomer("Gosha");
+                Customer c3 = new Customer(id: 4, name: 'Kostya');
+                repository.save(c3);
+                Customer c4 = service.addCustomer("Gosha");
+                
+                Post p1 = new Post(id: 1, date: new Date(), content: "Today is ${LocalDate.now().getDayOfWeek()}", customerId: c1.id);
+                Post p2 = new Post(id: 2, date: new Date(), content: "I like spring", customerId: c1.id);
+                postRepository.save(p1);
+                postRepository.save(p2);
                 println "SAVED"
             };
         }

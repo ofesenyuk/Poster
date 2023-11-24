@@ -1,7 +1,8 @@
 version: "3.8"
 services: 
     mongodb-sf:
-        image: mongo
+#        The latest version that can work WITHOUT AVX is
+        image: mongo:4.4.18
         restart: unless-stopped
         ports:
 #            HOST:CONTAINER
