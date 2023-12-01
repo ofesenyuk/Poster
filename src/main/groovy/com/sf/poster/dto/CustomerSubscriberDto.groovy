@@ -1,6 +1,6 @@
 package com.sf.poster.dto
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull
 
 /**
  *
@@ -8,8 +8,18 @@ import jakarta.validation.constraints.NotNull;
  */
 class CustomerSubscriberDto {
     @NotNull
-    long customerId;
+    Long customerId
     @NotNull
-    long postCustomerId;
+    Long postCustomerId
+
+    @Override
+    String toString() {
+        """
+            {
+            "customerId": ${customerId},
+            "postCustomerId": ${postCustomerId}
+            }
+        """
+    }
 }
 

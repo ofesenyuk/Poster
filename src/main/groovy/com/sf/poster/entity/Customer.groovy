@@ -8,13 +8,14 @@ import org.springframework.data.annotation.Id
  */
 class Customer {
     @Id
-    Long id;
-    String name;
-    Set<Long> subscriptionsIds = new HashSet<>();
+    Long id
+    String name
+    Set<Long> subscriptionsIds = new HashSet<>()
     
     @Override
     String toString() {
-        "$id:{id} name:${name}"
+        "{\"id\": ${id}, \n \"name\": \"${name}\"}"
     }
+
 }
 

@@ -1,8 +1,8 @@
 package com.sf.poster.entity
 
 import org.springframework.data.annotation.Id
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.NotBlank
 
 /**
  *
@@ -10,15 +10,20 @@ import jakarta.validation.constraints.NotBlank;
  */
 class Post {
 	@Id
-        Long id;
+        Long id
         @NotNull
-        Date date;
+        Date date
         @NotBlank
-        String content;
+        String content
         @NotNull
-        Long customerId;
-        Long parentPostId;
-        Set<Long> likerIds = new HashSet<>();
-        List<Post> comments = new ArrayList<>();
+        Long customerId
+        Long parentPostId
+        Set<Long> likerIds = new HashSet<>()
+        List<Post> comments = new ArrayList<>()
+
+        @Override
+        String toString() {
+                "{\"id\":${id},\"customerId\":${customerId},\"content\":\"${content}\",\"date\":${date},\"likerIds\":${likerIds},\"comments\":${comments}"
+        }
 }
 

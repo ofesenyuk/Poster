@@ -19,26 +19,27 @@ class PosterLikeTwitterApplication {
         SpringApplication.run(PosterLikeTwitterApplication, args)
     }
         
-    @Bean
-    public CommandLineRunner run(CustomerRepository repository, 
-        CustomerService service, PostRepository postRepository) {
+//    @Bean
+    CommandLineRunner run(CustomerRepository repository,
+                          CustomerService service, PostRepository postRepository) {
         { args -> {
-                repository.deleteAll();
+                repository.deleteAll()
                 println "TEST"
-                Customer c1 = new Customer(id: 1, name: 'Vova');
-                repository.save(c1);
-                Customer c2 = new Customer(id: 3, name: 'Kolya');
-                repository.save(c2);
-                Customer c3 = new Customer(id: 4, name: 'Kostya');
-                repository.save(c3);
-                Customer c4 = service.addCustomer("Gosha");
-                
-                Post p1 = new Post(id: 1, date: new Date(), content: "Today is ${LocalDate.now().getDayOfWeek()}", customerId: c1.id);
-                Post p2 = new Post(id: 2, date: new Date(), content: "I like spring", customerId: c1.id);
-                postRepository.save(p1);
-                postRepository.save(p2);
+                Customer c1 = new Customer(id: 1, name: 'Vova')
+                repository.save(c1)
+                Customer c2 = new Customer(id: 3, name: 'Kolya')
+                repository.save(c2)
+                Customer c3 = new Customer(id: 4, name: 'Kostya')
+                repository.save(c3)
+                Customer c4 = service.addCustomer("Gosha")
+                repository.save(c4)
+
+            Post p1 = new Post(id: 1, date: new Date(), content: "Today is ${LocalDate.now().getDayOfWeek()}", customerId: c1.id)
+                Post p2 = new Post(id: 2, date: new Date(), content: "I like spring", customerId: c1.id)
+                postRepository.save(p1)
+                postRepository.save(p2)
                 println "SAVED"
-            };
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.sf.poster.dto
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull
 
 /**
  *
@@ -8,17 +8,17 @@ import jakarta.validation.constraints.NotNull;
  */
 class PostDto {
     @NotNull
-    Long id;
+    Long id
     @NotNull
-    Long customerId;
+    Long customerId
     @NotNull
-    String text;
-    Date date;
-    Set<Long> likerIds;
+    String text
+    Date date
+    Set<Long> likerIds
         
     @Override
     String toString() {
-        "id: ${id} customerId: ${customerId} text: ${text} date: ${date} likerIds: ${likerIds}"
+        "{\"id\":${id},\"customerId\":${customerId},\"text\":\"${text}\",\"date\":${date.time},\"likerIds\":${likerIds}}"
     }
 }
 

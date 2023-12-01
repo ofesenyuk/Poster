@@ -15,22 +15,22 @@ import org.springframework.http.HttpStatus
 @ControllerAdvice
 class GlobalExceptionHandler {
     @ExceptionHandler
-    public ResponseEntity<AppError> catchResourceNotFoundException(MethodArgumentNotValidException e) {
+    static ResponseEntity<AppError> catchResourceNotFoundException(MethodArgumentNotValidException e) {
         String errorsStr = e.getFieldErrors()        
         .collect{"${it.getField()} - ${it.getDefaultMessage()}"}
         .sort()
-        .join(", ");
-        new ResponseEntity<>(new AppError(statusCode: HttpStatus.BAD_REQUEST.value(), message: errorsStr), HttpStatus.BAD_REQUEST);
+        .join(", ")
+        new ResponseEntity<>(new AppError(statusCode: HttpStatus.BAD_REQUEST.value(), message: errorsStr), HttpStatus.BAD_REQUEST)
     }
     
     @ExceptionHandler
-    public ResponseEntity<AppError> catchIllegalArgumentException(IllegalArgumentException e) {
-        new ResponseEntity<>(new AppError(statusCode: HttpStatus.NOT_FOUND.value(), message: e.message), HttpStatus.NOT_FOUND);
+    static ResponseEntity<AppError> catchIllegalArgumentException(IllegalArgumentException e) {
+        new ResponseEntity<>(new AppError(statusCode: HttpStatus.NOT_FOUND.value(), message: e.message), HttpStatus.NOT_FOUND)
     }
     
     @ExceptionHandler
-    public ResponseEntity<AppError> catchIllegalAccessException(IllegalAccessException e) {
-        new ResponseEntity<>(new AppError(statusCode: HttpStatus.FORBIDDEN.value(), message: e.message), HttpStatus.FORBIDDEN);
+    static ResponseEntity<AppError> catchIllegalAccessException(IllegalAccessException e) {
+        new ResponseEntity<>(new AppError(statusCode: HttpStatus.FORBIDDEN.value(), message: e.message), HttpStatus.FORBIDDEN)
     }
 }
 
